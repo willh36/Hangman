@@ -3,132 +3,134 @@ import sys
 import time
 from words import collection
 
-
 #pyfiglet setup
 from colorama import init
 init(strip=not sys.stdout.isatty()) # strip colors if stdout is redirected
 from termcolor import cprint
 from pyfiglet import figlet_format
 
+# randomly select a word from the collection
 selecword = random.choice(collection)
+# get the length of the selected word
 length = len(selecword)
 
 # this prints the list view of the words letters separated
-letters = list(selecword)
-nonrep = list(dict.fromkeys(letters))
+nonrep = list(dict.fromkeys(selecword))
 nonrep_length = len(nonrep)
 
-# this prints the comp view of the letter count
-
+# this stores the letters that have been guessed
 wrong = []
 correct = []
 attempted = []
-tick = nonrep_length
+
+# this stores the number of correct guesses
 correct_count = 0
 
-print(" ")
-print(" ")
-print(" ")
-time.sleep(random.randint(0, 1))
+# this counts down the user's lives
+remaining = 10
+
+# This controls the game loop
+playing = True
+
+
+
+# --- Start of the game ---
 cprint(figlet_format('Hangman', font='standard'))
 time.sleep(1)
 play = input("Would you like to play? (y/n): ")
 
 if play == "y":
-    print(" ")
-    print(" ")
     time.sleep(1)
+    print(" ")
     print("Welcome to Hangman! Try and guess the word before your time runs out!")
-    time.sleep(3)
+    time.sleep(2)
     print(" ")
-    print("(_) \n"
-          "\|/ \n"
-          " | \n"
-          "/ \ \n")
-    time.sleep(0.85)
-    char_name = input("This is your buddy, what would you like to name him?: ")
-    print(" ")
-    time.sleep(1)
-    print("(_) 'Hi! I'm", char_name,"!'" "\n"
-          "\|/ \n"
-          " | \n"
-          "/ \ \n")
-    time.sleep(1.7)
-    print("Selecting a word...")
-    time.sleep(1)
-    print("...")
-    time.sleep(0.8)
-    print("...")
-    time.sleep(1.2)
-    print("...")
-    time.sleep(1.6)
     print("A word has been selected!")
     print(" ")
-    # this prints the markers for the word
-    for j in range(length):
-        print("_ ", end="")
-    print()
-    # this counts down your persons lives
-    remaining = 10
 
-    playing = True
+    # this prints the markers for the word
+    time.sleep(1)
+    for j in range(length):
+        print("_ ", end=" ")
+    print()
 
     # this makes it repeat until you run out of tries or win
     while playing == True:
-        time.sleep(0.6)
+        print(" ")
+        time.sleep(1)
         guess = input("Enter your guess: ")
-        time.sleep(0.4)
+
         if guess in attempted:
+            time.sleep(0.65)
             print("ERROR: You've already guessed this! Try again")
         else:
             if guess in nonrep:
                 correct.append(guess)
                 attempted.append(guess)
+                time.sleep(0.65)
                 print(" ")
                 print("CORRECT")
+                time.sleep(1)
                 print(" ")
-                print("You have", tick - correct_count, "unguessed letters remaining")
+                print("You have", nonrep_length - correct_count, "unguessed letters remaining")
+                time.sleep(1)
                 print("Correct letters:", correct)
+                time.sleep(1)
                 print("Incorrect letters:", wrong)
-                print(" ")
+                time.sleep(1)
+                print("You still have", remaining, "/ 10 lives remining")
                 print(" ")
                 correct_count += 1
-                if correct_count == tick:
+                if correct_count == nonrep_length:
+                    time.sleep(1)
                     print(" ")
                     print(" ")
                     print(" ")
                     print(" ")
                     cprint(figlet_format('You Win!', font='standard'))
+                    time.sleep(1)
                     print("Your person survived!")
                     time.sleep(5)
                     playing = False
-            elif guess == "give up":
+            elif guess == "quit":
+                time.sleep(1)
                 cprint(figlet_format('Game Over', font='standard'))
+                time.sleep(0.65)
                 print("The word was:", selecword)
+                time.sleep(0.5)
                 print("Better luck next time :/")
-                time.sleep(5)
+                time.sleep(2)
                 playing = False
-            else:
+            elif guess is not nonrep:
                 wrong.append(guess)
                 attempted.append(guess)
-                print(" ")
-                print("INCORRECT")
-                print(" ")
-                print("You have", tick - correct_count, "unguessed letters remaining")
-                print("Correct letters:", correct)
-                print("Incorrect letters:", wrong)
-                remaining=remaining-1
-                print(char_name, "has", remaining, " lives left")
-                print(" ")
-                print(" ")
-    if remaining == 0:
-        cprint(figlet_format('Game Over', font='standard'))
-        print("You ran out of guesses :(")
-        print("The word was:", selecword)
-        print("Reload game to try again")
-        time.sleep(5)
-        playing = False
-
+                if remaining == 1:
+                    time.sleep(1)
+                    cprint(figlet_format('Game Over', font='standard'))
+                    time.sleep(0.65)
+                    print("You ran out of guesses :(")
+                    time.sleep(0.5)
+                    print("The word was:", selecword)
+                    time.sleep(1)
+                    print("Reload game to try again")
+                    time.sleep(5)
+                    playing = False
+                else:
+                    remaining=remaining-1
+                    time.sleep(0.65)
+                    print(" ")
+                    print("INCORRECT")
+                    print(" ")
+                    time.sleep(1)
+                    print("You have", nonrep_length - correct_count, "unguessed letters remaining")
+                    time.sleep(0.65)
+                    print("Correct letters:", correct)
+                    time.sleep(0.5)
+                    print("Incorrect letters:", wrong)
+                    time.sleep(1)
+                    print("You have", remaining, "/ 10 lives remining")
+                    print(" ")
+                    print(" ")
 elif play == "n":
     time.sleep(0.5)
     print("Closing Game...")
@@ -136,7 +138,8 @@ elif play == "n":
     cprint(figlet_format('Goodbye', font='standard'))
 else:
     print(" ")
-    print(" ")
+    time.sleep(1)
     print("ERROR: Input not recognised")
+    time.sleep(1)
     print("The game will now terminate. Reboot the game to try again")
-    time.sleep(5)
+    time.sleep(2)
