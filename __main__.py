@@ -36,20 +36,25 @@ playing = True
 
 # --- Start of the game ---
 cprint(figlet_format('Hangman', font='standard'))
+print("Version 1.2")
+print(selecword)
+print("")
 time.sleep(1)
 play = input("Would you like to play? (y/n): ")
-
 if play == "y":
     time.sleep(1)
     print(" ")
     print("Welcome to Hangman! Try and guess the word before your time runs out!")
     time.sleep(2)
     print(" ")
+    print("To end the game at anytime, type 'quit'")
+    time.sleep(2)
+    print(" ")
     print("A word has been selected!")
     print(" ")
 
     # this prints the markers for the word
-    time.sleep(1)
+    time.sleep(1.5)
     for j in range(length):
         print("_ ", end=" ")
     print()
@@ -59,12 +64,50 @@ if play == "y":
         print(" ")
         time.sleep(1)
         guess = input("Enter your guess: ")
+        guesslen = len(guess)
 
         if guess in attempted:
             time.sleep(0.65)
             print("ERROR: You've already guessed this! Try again")
         else:
-            if guess in nonrep:
+            if guesslen > 1:
+                if guess == selecword:
+                    time.sleep(1)
+                    print(" ")
+                    print(" ")
+                    cprint(figlet_format('You Win!', font='standard'))
+                    time.sleep(1)
+                    print("Your person survived!")
+                    print(" ")
+                    time.sleep(5)
+                    playing = False
+                else:
+                    if remaining == 1:
+                        time.sleep(1)
+                        cprint(figlet_format('Game Over', font='standard'))
+                        time.sleep(0.65)
+                        print("You ran out of guesses :(")
+                        time.sleep(0.5)
+                        print("The word was:", selecword)
+                        time.sleep(1)
+                        print("Reload game to try again")
+                        time.sleep(5)
+                        playing = False
+                    else:
+                        remaining=remaining-1
+                        time.sleep(0.65)
+                        print(" ")
+                        print("INCORRECT")
+                        print(" ")
+                        time.sleep(0.65)
+                        print("Correct letters:", correct)
+                        time.sleep(0.5)
+                        print("Incorrect letters:", wrong)
+                        time.sleep(1)
+                        print("You have", remaining, "/ 10 lives remining")
+                        print(" ")
+                        print(" ")
+            elif guess in nonrep:
                 correct.append(guess)
                 attempted.append(guess)
                 time.sleep(0.65)
